@@ -1,0 +1,32 @@
+
+
+.ContactForm{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    
+
+    width: 300px;
+    padding: 10px;
+  
+}
+
+.ContactFormInput{
+  width: 200px;
+}
+
+.label{
+    font-weight: 600;
+}
+
+.label:not(:first-child){
+    margin-top: 10px;
+}
+
+.submitBtn{
+    display: inline-flex;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100px;
+ 
+}
