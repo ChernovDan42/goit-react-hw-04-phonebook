@@ -1,4 +1,4 @@
-import { Component } from 'react';
+
 import css from './ContactForm.module.css';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types'
