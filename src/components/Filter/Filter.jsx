@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import css from './Filter.module.css'
 
 
-export function Filter({filter,onChange}){
+export function Filter({ filter, onChange }) {
+    
+    
 
 
         return (

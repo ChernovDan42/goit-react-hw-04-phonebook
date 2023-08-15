@@ -1,97 +1,71 @@
-import { Component } from "react"
+
 import { ContactForm } from "./ContactForm/ContactForm"
 import { Filter } from "./Filter/Filter"
 import { ContactList } from "./ContactList/ContactList"
+import { useState } from "react"
+import { useEffect } from "react"
+import { useMemo } from "react"
 
 
 
+function loadFromLocaleStorage(){
+
+return JSON.parse(window.localStorage.getItem('contacts'))
+}
 
 
+export function App() {
+
+  const [contacts, setContacts] = useState(()=>loadFromLocaleStorage() || [])
+  const [filter,setFilter]=useState('')
 
 
-export class App extends Component {
-
-
-  state = {
-    contacts: [],
-    filter: '',
-  }
-
-
-  onFilterChange = e => {
-   this.setState({
-      filter: e.currentTarget.value
-    })
-  }   
-
-
-  componentDidUpdate(perevProps,prevState) {
-    if (prevState.contacts.length !== this.state.contacts.length) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-      
-    }
-    
-  }
-
-  componentDidMount() {
-    const localContacts = localStorage.getItem("contacts")
-    const parsed=JSON.parse(localContacts)
-    
-    if (parsed) {
-      this.setState({contacts:parsed})
-      
-    }
-  }
   
 
-  searchName(obj) {
-    
-return this.state.contacts.find(el=> el.name===obj.name)
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts])
 
+ 
+  
+  const searchName = obj => {
+    if (contacts) {
+     return contacts.find(el=> el.name===obj.name)
+   }
   }
   
+ const onSubmit = obj => {
 
-  onSubmit = obj => {
-
-    if (this.searchName(obj)) {
+    if (searchName(obj)) {
       return alert(`${obj.name} is already in contacts`)
     }
 
-    this.setState(prevState=>({
-      contacts: [...prevState.contacts, obj ]
-    
-    }))
+   setContacts(state=>[...state,obj])
+   
   }
 
-  
-  handleDeleteContact = (id) => {
+  const  handleDeleteContact = (id) => {
 
-    const { contacts } = this.state
     const updateState = contacts.filter(el => el.id !== id);
+
     
-    this.setState({
-     contacts: updateState 
-    });
+   setContacts([...updateState]);
 
   }
 
-  filteredContacts = () => {
-    const { filter, contacts } = this.state
-  const normalized=filter.toLowerCase()
+   const onFilterChange = e => {
+   setFilter(e.currentTarget.value)
+  }  
 
-  
+  const filteredContacts = useMemo(()=> {
+  const normalized=filter.toLowerCase()
     
     return contacts.filter(contact => contact.name.toLowerCase().includes(normalized))
     
 
-  }
+  },[filter,contacts]) 
 
- 
-  render() {
 
-    const visibleContacts = this.filteredContacts();
-
-  
 
     return (
       <div style={{
@@ -99,16 +73,17 @@ return this.state.contacts.find(el=> el.name===obj.name)
       }}>
         <h1>Phonebook</h1>
         
-      <ContactForm onSubmit={this.onSubmit}/>
+        <ContactForm onSubmit={onSubmit} />
+        
+        <Filter filter={filter}  onChange={onFilterChange}/>
 
-
-        <h2>Contacts</h2>
-        <Filter filter={this.state.filter} onChange={ this.onFilterChange} />
        
-        < ContactList 
-          contacts={visibleContacts}
-          handleDeleteContact={this.handleDeleteContact}
+         < ContactList 
+          contacts={filteredContacts}
+          handleDeleteContact={handleDeleteContact}
+
           />
+       
         
 
     </div>
@@ -117,4 +92,4 @@ return this.state.contacts.find(el=> el.name===obj.name)
 )
   
   }
-};
+
