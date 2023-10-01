@@ -16,13 +16,8 @@ export function App() {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const searchName = obj => {
-    if (contacts) {
-      return contacts.find(
-        el => el.name.toLowerCase() === obj.name.toLowerCase()
-      );
-    }
-  };
+  const searchName = obj =>
+    contacts.find(el => el.name.toLowerCase() === obj.name.toLowerCase());
 
   const onSubmit = obj => {
     if (searchName(obj)) {
