@@ -4,11 +4,7 @@ import css from './css/Item.module.css';
 export function ContactItem({ name, number, id, handleDeleteContact }) {
   return (
     <li className={css.item}>
-      <p
-        style={{
-          display: 'inline-block',
-        }}
-      >
+      <p className={css.paragraph}>
         {name}: {number}
       </p>
       <button

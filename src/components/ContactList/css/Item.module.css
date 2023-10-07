@@ -7,3 +7,7 @@
 .btn{
     display: inline;
 }
+
+.paragraph{
+    display: inline-block;
+}
